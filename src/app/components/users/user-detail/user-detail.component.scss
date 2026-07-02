@@ -1,0 +1,94 @@
+.user-detail-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+
+  h2 {
+    margin-bottom: 30px;
+    color: #333;
+  }
+}
+
+.user-form {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #374151;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+  }
+
+  &.checkbox {
+    label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+
+  &.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+
+    &:hover {
+      background-color: #2563eb;
+    }
+  }
+
+  &.btn-secondary {
+    background-color: #e5e7eb;
+    color: #374151;
+
+    &:hover {
+      background-color: #d1d5db;
+    }
+  }
+}

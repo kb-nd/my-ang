@@ -1,0 +1,33 @@
+<div class="user-list-container">
+  <div class="header">
+    <h2>Felhasználók</h2>
+    <a routerLink="/users/new" class="btn btn-primary">Új felhasználó</a>
+  </div>
+
+  <div class="user-grid">
+    @for (user of users; track user.id) {
+      <div class="user-card" [class.inactive]="!user.is_active">
+        <div class="user-info">
+          <h3>{{ user.name }}</h3>
+          <p class="email">{{ user.email }}</p>
+          @if (user.phone) {
+            <p class="phone">{{ user.phone }}</p>
+          }
+          <span class="status" [class.active]="user.is_active">
+            {{ user.is_active ? 'Aktív' : 'Inaktív' }}
+          </span>
+        </div>
+        <div class="user-actions">
+          <a [routerLink]="['/users', user.id]" class="btn btn-secondary">Szerkesztés</a>
+          <button (click)="deleteUser(user.id)" class="btn btn-danger">Törlés</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (users.length === 0) {
+    <div class="empty-state">
+      <p>Nincsenek felhasználók.</p>
+    </div>
+  }
+</div>

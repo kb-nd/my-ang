@@ -1,0 +1,75 @@
+<div class="task-detail-container">
+  <h2>{{ isNew ? 'Új feladat' : 'Feladat szerkesztése' }}</h2>
+
+  <form (ngSubmit)="onSubmit()" class="task-form">
+    <div class="form-group">
+      <label for="title">Cím *</label>
+      <input
+        type="text"
+        id="title"
+        [(ngModel)]="formData.title"
+        name="title"
+        required
+        placeholder="Adja meg a feladat címét"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Leírás</label>
+      <textarea
+        id="description"
+        [(ngModel)]="formData.description"
+        name="description"
+        rows="4"
+        placeholder="Adja meg a feladat leírását"
+      ></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="status">Állapot</label>
+        <select id="status" [(ngModel)]="formData.status" name="status">
+          <option value="pending">Függőben</option>
+          <option value="in-progress">Folyamatban</option>
+          <option value="completed">Befejezett</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="priority">Prioritás</label>
+        <select id="priority" [(ngModel)]="formData.priority" name="priority">
+          <option value="low">Alacsony</option>
+          <option value="medium">Közepes</option>
+          <option value="high">Magas</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="user_id">Hozzárendelve</label>
+        <select id="user_id" [(ngModel)]="formData.user_id" name="user_id">
+          <option [ngValue]="undefined">Nincs kiválasztva</option>
+          @for (user of users; track user.id) {
+            <option [ngValue]="user.id">{{ user.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="due_date">Határidő</label>
+        <input
+          type="date"
+          id="due_date"
+          [(ngModel)]="formData.due_date"
+          name="due_date"
+        />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" (click)="onCancel()" class="btn btn-secondary">Mégse</button>
+      <button type="submit" class="btn btn-primary">{{ isNew ? 'Létrehozás' : 'Mentés' }}</button>
+    </div>
+  </form>
+</div>

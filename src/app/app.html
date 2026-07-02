@@ -1,0 +1,27 @@
+<div class="app-container">
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a routerLink="/">My-Ang</a>
+    </div>
+    <ul class="nav-links">
+      <li>
+        <a routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          Felhasználók
+        </a>
+      </li>
+      <li>
+        <a routerLink="/tasks" routerLinkActive="active">
+          Feladatok
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 My-Ang Projekt</p>
+  </footer>
+</div>

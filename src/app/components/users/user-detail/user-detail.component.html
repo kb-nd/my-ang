@@ -1,0 +1,56 @@
+<div class="user-detail-container">
+  <h2>{{ isNew ? 'Új felhasználó' : 'Felhasználó szerkesztése' }}</h2>
+
+  <form (ngSubmit)="onSubmit()" class="user-form">
+    <div class="form-group">
+      <label for="name">Név *</label>
+      <input
+        type="text"
+        id="name"
+        [(ngModel)]="formData.name"
+        name="name"
+        required
+        placeholder="Adja meg a nevet"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email *</label>
+      <input
+        type="email"
+        id="email"
+        [(ngModel)]="formData.email"
+        name="email"
+        required
+        placeholder="Adja meg az email címet"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Telefonszám</label>
+      <input
+        type="tel"
+        id="phone"
+        [(ngModel)]="formData.phone"
+        name="phone"
+        placeholder="Adja meg a telefonszámot"
+      />
+    </div>
+
+    <div class="form-group checkbox">
+      <label>
+        <input
+          type="checkbox"
+          [(ngModel)]="formData.is_active"
+          name="is_active"
+        />
+        Aktív felhasználó
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" (click)="onCancel()" class="btn btn-secondary">Mégse</button>
+      <button type="submit" class="btn btn-primary">{{ isNew ? 'Létrehozás' : 'Mentés' }}</button>
+    </div>
+  </form>
+</div>

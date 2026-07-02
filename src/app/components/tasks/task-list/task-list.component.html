@@ -1,0 +1,63 @@
+<div class="task-list-container">
+  <div class="header">
+    <h2>Feladatok</h2>
+    <a routerLink="/tasks/new" class="btn btn-primary">Új feladat</a>
+  </div>
+
+  <div class="task-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Cím</th>
+          <th>Állapot</th>
+          <th>Prioritás</th>
+          <th>Hozzárendelve</th>
+          <th>Határidő</th>
+          <th>Műveletek</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (task of tasks; track task.id) {
+          <tr>
+            <td>
+              <div class="task-title">{{ task.title }}</div>
+              @if (task.description) {
+                <div class="task-description">{{ task.description }}</div>
+              }
+            </td>
+            <td>
+              <span class="status-badge" [class]="getStatusClass(task.status)">
+                {{ getStatusLabel(task.status) }}
+              </span>
+            </td>
+            <td>
+              <span class="priority-badge" [class]="getPriorityClass(task.priority)">
+                {{ getPriorityLabel(task.priority) }}
+              </span>
+            </td>
+            <td>{{ task.user_name || 'Nincs hozzárendelve' }}</td>
+            <td>
+              @if (task.due_date) {
+                {{ task.due_date | date:'yyyy.MM.dd' }}
+              } @else {
+                <span class="no-date">-</span>
+              }
+            </td>
+            <td>
+              <div class="actions">
+                <a [routerLink]="['/tasks', task.id]" class="btn btn-secondary btn-sm">Szerkesztés</a>
+                <button (click)="deleteTask(task.id)" class="btn btn-danger btn-sm">Törlés</button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (tasks.length === 0) {
+    <div class="empty-state">
+      <p>Nincsenek feladatok.</p>
+    </div>
+  }
+</div>
