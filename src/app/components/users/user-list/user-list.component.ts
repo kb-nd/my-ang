@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../../services/user.service';
@@ -14,7 +14,10 @@ import { User } from '../../../models/user.model';
 export class UserListComponent implements OnInit {
   users: User[] = [];
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -26,6 +29,7 @@ export class UserListComponent implements OnInit {
       next: (users) => {
         console.log('Users received:', users);
         this.users = users;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Hiba a felhasználók betöltésekor:', err);
@@ -37,7 +41,10 @@ export class UserListComponent implements OnInit {
   deleteUser(id: number): void {
     if (confirm('Biztosan törölni szeretné ezt a felhasználót?')) {
       this.userService.deleteUser(id).subscribe({
-        next: () => this.loadUsers(),
+        next: () => {
+          this.loadUsers();
+          this.cdr.detectChanges();
+        },
         error: (err) => console.error('Hiba a törlés során:', err)
       });
     }

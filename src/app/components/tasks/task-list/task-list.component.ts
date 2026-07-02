@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TaskService } from '../../../services/task.service';
@@ -14,15 +14,23 @@ import { Task } from '../../../models/task.model';
 export class TaskListComponent implements OnInit {
   tasks: Task[] = [];
 
-  constructor(private taskService: TaskService) {}
+  constructor(
+    private taskService: TaskService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadTasks();
   }
 
   loadTasks(): void {
+    console.log('Loading tasks...');
     this.taskService.getTasks().subscribe({
-      next: (tasks) => this.tasks = tasks,
+      next: (tasks) => {
+        console.log('Tasks received:', tasks);
+        this.tasks = tasks;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error('Hiba a feladatok betöltésekor:', err)
     });
   }
