@@ -45,3 +45,9 @@ Thumbs.db
 
 # SQLite database
 /server/data/
+
+# OpenCode Session
+continue.txt
+
+
+
