@@ -21,7 +21,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Szerver indítása
-app.listen(PORT, () => {
-  console.log(`🚀 Szerver fut a http://localhost:${PORT} címen`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Szerver fut a http://0.0.0.0:${PORT} címen`);
   console.log(`📦 API végpontok: http://localhost:${PORT}/api/`);
 });
