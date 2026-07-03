@@ -1,0 +1,89 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>Regisztráció</h1>
+
+    @if (error()) {
+      <div class="alert alert-error">{{ error() }}</div>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Név</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="Teljes neved"
+          [class.error]="registerForm.controls.name.invalid && registerForm.controls.name.touched"
+        />
+        @if (registerForm.controls.name.invalid && registerForm.controls.name.touched) {
+          <span class="error-text">A név legalább 2 karakter</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Email címed"
+          [class.error]="registerForm.controls.email.invalid && registerForm.controls.email.touched"
+        />
+        @if (registerForm.controls.email.invalid && registerForm.controls.email.touched) {
+          <span class="error-text">Érvényes email cím megadása kötelező</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Telefonszám (opcionális)</label>
+        <input
+          id="phone"
+          type="tel"
+          formControlName="phone"
+          placeholder="+36 XX XXX XXXX"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Jelszó</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Jelszó (min. 6 karakter)"
+          [class.error]="registerForm.controls.password.invalid && registerForm.controls.password.touched"
+        />
+        @if (registerForm.controls.password.invalid && registerForm.controls.password.touched) {
+          <span class="error-text">A jelszó legalább 6 karakter</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Jelszó megerősítése</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          formControlName="confirmPassword"
+          placeholder="Jelszó újra"
+          [class.error]="registerForm.controls.confirmPassword.invalid && registerForm.controls.confirmPassword.touched"
+        />
+        @if (registerForm.controls.confirmPassword.errors?.['mismatch'] && registerForm.controls.confirmPassword.touched) {
+          <span class="error-text">A jelszavak nem egyeznek</span>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading() || registerForm.invalid">
+        @if (isLoading()) {
+          <span class="spinner"></span> Regisztráció...
+        } @else {
+          Regisztráció
+        }
+      </button>
+    </form>
+
+    <p class="auth-link">
+      Már van fiókod? <a routerLink="/login">Bejelentkezés</a>
+    </p>
+  </div>
+</div>

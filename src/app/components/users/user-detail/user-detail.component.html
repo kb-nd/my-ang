@@ -1,6 +1,13 @@
 <div class="user-detail-container">
   <h2>{{ isNew ? 'Új felhasználó' : 'Felhasználó szerkesztése' }}</h2>
 
+  @if (errorMessage) {
+    <div class="alert alert-error">{{ errorMessage }}</div>
+  }
+  @if (successMessage) {
+    <div class="alert alert-success">{{ successMessage }}</div>
+  }
+
   <form (ngSubmit)="onSubmit()" class="user-form">
     <div class="form-group">
       <label for="name">Név *</label>
@@ -46,6 +53,17 @@
         />
         Aktív felhasználó
       </label>
+    </div>
+
+    <div class="form-group">
+      <label for="password">{{ isNew ? 'Jelszó *' : 'Új jelszó (ha változtatni kell)' }}</label>
+      <input
+        type="password"
+        id="password"
+        [(ngModel)]="password"
+        name="password"
+        [placeholder]="isNew ? 'Adja meg a jelszót' : 'Hagyja üresen, ha nem változtatja'"
+      />
     </div>
 
     <div class="form-actions">

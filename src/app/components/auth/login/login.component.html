@@ -1,0 +1,60 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>Bejelentkezés</h1>
+
+    @if (error()) {
+      <div class="alert alert-error">{{ error() }}</div>
+    }
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Email címed"
+          [class.error]="loginForm.controls.email.invalid && loginForm.controls.email.touched"
+        />
+        @if (loginForm.controls.email.invalid && loginForm.controls.email.touched) {
+          <span class="error-text">Érvényes email cím megadása kötelező</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Jelszó</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Jelszavad"
+          [class.error]="loginForm.controls.password.invalid && loginForm.controls.password.touched"
+        />
+        @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
+          <span class="error-text">A jelszó legalább 6 karakter</span>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading() || loginForm.invalid">
+        @if (isLoading()) {
+          <span class="spinner"></span> Bejelentkezés...
+        } @else {
+          Bejelentkezés
+        }
+      </button>
+    </form>
+
+    <p class="auth-link">
+      Nincs fiókod? <a routerLink="/register">Regisztráció</a>
+    </p>
+
+    <details class="demo-credentials">
+      <summary>Demo fiókok</summary>
+      <ul>
+        <li>kovacs.janos&#64;example.com / password123</li>
+        <li>nagy.anna&#64;example.com / password123</li>
+        <li>szabo.peter&#64;example.com / password123</li>
+      </ul>
+    </details>
+  </div>
+</div>

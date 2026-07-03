@@ -22,6 +22,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL DEFAULT '',
     phone TEXT,
     is_active INTEGER DEFAULT 1,
     created_at TEXT DEFAULT (datetime('now'))
@@ -40,12 +41,19 @@ db.exec(`
   );
 `);
 
+// Migráció: password_hash oszlop hozzáadása, ha nem létezik
+const columns = db.prepare("PRAGMA table_info(users)").all() as { name: string }[];
+const hasPasswordHash = columns.some(col => col.name === 'password_hash');
+if (!hasPasswordHash) {
+  db.exec(`ALTER TABLE users ADD COLUMN password_hash TEXT NOT NULL DEFAULT ''`);
+}
+
 // Seed data - csak ha üres az adatbázis
 const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get() as { count: number };
 if (userCount.count === 0) {
   const insertUser = db.prepare(`
-    INSERT INTO users (name, email, phone, is_active, created_at)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO users (name, email, password_hash, phone, is_active, created_at)
+    VALUES (?, ?, ?, ?, ?, ?)
   `);
 
   const insertTask = db.prepare(`
@@ -55,9 +63,12 @@ if (userCount.count === 0) {
 
   // Tranzakció a seed adatok beszúrásához
   const seedData = db.transaction(() => {
-    insertUser.run('Kovács János', 'kovacs.janos@example.com', '+36 30 123 4567', 1, '2024-01-15');
-    insertUser.run('Nagy Anna', 'nagy.anna@example.com', '+36 20 987 6543', 1, '2024-02-20');
-    insertUser.run('Szabó Péter', 'szabo.peter@example.com', null, 0, '2024-03-10');
+    const bcrypt = require('bcrypt');
+    const defaultPassword = bcrypt.hashSync('password123', 10);
+
+    insertUser.run('Kovács János', 'kovacs.janos@example.com', defaultPassword, '+36 30 123 4567', 1, '2024-01-15');
+    insertUser.run('Nagy Anna', 'nagy.anna@example.com', defaultPassword, '+36 20 987 6543', 1, '2024-02-20');
+    insertUser.run('Szabó Péter', 'szabo.peter@example.com', defaultPassword, null, 0, '2024-03-10');
 
     insertTask.run('Projekt tervezés', 'Az új projekt követelményeinek kidolgozása', 'completed', 'high', 1, '2024-04-01', '2024-03-15');
     insertTask.run('Kód review', 'A fejlesztői ág kódjának áttekintése', 'in-progress', 'medium', 2, '2024-04-10', '2024-03-20');

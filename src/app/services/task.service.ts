@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Task } from '../models/task.model';
@@ -7,9 +7,8 @@ import { Task } from '../models/task.model';
   providedIn: 'root'
 })
 export class TaskService {
+  private http = inject(HttpClient);
   private apiUrl = '/api/tasks';
-
-  constructor(private http: HttpClient) {}
 
   getTasks(): Observable<Task[]> {
     return this.http.get<Task[]>(this.apiUrl);
@@ -17,10 +16,6 @@ export class TaskService {
 
   getTaskById(id: number): Observable<Task | undefined> {
     return this.http.get<Task>(`${this.apiUrl}/${id}`);
-  }
-
-  getTasksByUserId(userId: number): Observable<Task[]> {
-    return this.http.get<Task[]>(`${this.apiUrl}/user/${userId}`);
   }
 
   addTask(task: Omit<Task, 'id' | 'created_at' | 'user_name'>): Observable<Task> {

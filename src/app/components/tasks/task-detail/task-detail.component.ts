@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -31,7 +31,8 @@ export class TaskDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private taskService: TaskService,
-    private userService: UserService
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -46,7 +47,10 @@ export class TaskDetailComponent implements OnInit {
 
   loadUsers(): void {
     this.userService.getUsers().subscribe({
-      next: (users) => this.users = users,
+      next: (users) => {
+        this.users = users;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error('Hiba a felhasználók betöltésekor:', err)
     });
   }
@@ -64,6 +68,7 @@ export class TaskDetailComponent implements OnInit {
             user_id: task.user_id,
             due_date: task.due_date || ''
           };
+          this.cdr.detectChanges();
         }
       },
       error: (err) => console.error('Hiba a feladat betöltésekor:', err)

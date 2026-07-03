@@ -1,0 +1,119 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <h1>Profilom</h1>
+    <p>Kezeld a fiókadataidat és jelszavadat</p>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="alert alert-error">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="alert alert-success">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      {{ successMessage() }}
+    </div>
+  }
+
+  <div class="profile-grid">
+    <section class="profile-section">
+      <h2>Személyes adatok</h2>
+      <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()" class="profile-form">
+        <div class="form-group">
+          <label for="name">Név</label>
+          <input type="text" id="name" formControlName="name" placeholder="Név">
+          @if (profileForm.get('name')?.invalid && profileForm.get('name')?.touched) {
+            <span class="field-error">A név megadása kötelező (min. 2 karakter)</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" formControlName="email" placeholder="Email cím">
+          @if (profileForm.get('email')?.invalid && profileForm.get('email')?.touched) {
+            <span class="field-error">Érvényes email cím megadása kötelező</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Telefonszám (opcionális)</label>
+          <input type="tel" id="phone" formControlName="phone" placeholder="Telefonszám">
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || isLoading()">
+          @if (isLoading()) {
+            <div class="spinner"></div>
+            Mentés...
+          } @else {
+            Módosítások mentése
+          }
+        </button>
+      </form>
+    </section>
+
+    <section class="profile-section">
+      <h2>Jelszó módosítása</h2>
+      <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()" class="profile-form">
+        <div class="form-group">
+          <label for="currentPassword">Jelenlegi jelszó</label>
+          <input type="password" id="currentPassword" formControlName="currentPassword" placeholder="Jelenlegi jelszó">
+          @if (passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched) {
+            <span class="field-error">A jelenlegi jelszó megadása kötelező</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="newPassword">Új jelszó</label>
+          <input type="password" id="newPassword" formControlName="newPassword" placeholder="Új jelszó (min. 6 karakter)">
+          @if (passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched) {
+            <span class="field-error">Az új jelszónak legalább 6 karakter hosszúnak kell lennie</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Új jelszó megerősítése</label>
+          <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Új jelszó újra">
+          @if (passwordForm.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched) {
+            <span class="field-error">A két jelszó nem egyezik</span>
+          }
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="passwordForm.invalid || isLoading()">
+          @if (isLoading()) {
+            <div class="spinner"></div>
+            Módosítás...
+          } @else {
+            Jelszó megváltoztatása
+          }
+        </button>
+      </form>
+    </section>
+
+    <section class="profile-section danger-zone">
+      <h2>Veszélyzóna</h2>
+      <p>Ezek a műveletek véglegesek és nem vonhatók vissza.</p>
+      <button type="button" class="btn btn-danger" (click)="onDeleteAccount()" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <div class="spinner"></div>
+          Törlés...
+        } @else {
+          Fiók törlése
+        }
+      </button>
+    </section>
+  </div>
+
+  <div class="profile-actions">
+    <button class="btn btn-secondary" (click)="logout()">Kijelentkezés</button>
+  </div>
+</div>

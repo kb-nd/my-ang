@@ -3,6 +3,8 @@ import cors from 'cors';
 import path from 'path';
 import usersRouter from './routes/users';
 import tasksRouter from './routes/tasks';
+import authRouter from './routes/auth';
+import { authMiddleware } from './middleware/auth';
 
 const app = express();
 const PORT = process.env['PORT'] || 3000;
@@ -11,9 +13,12 @@ const PORT = process.env['PORT'] || 3000;
 app.use(cors());
 app.use(express.json());
 
-// API útvonalak
-app.use('/api/users', usersRouter);
-app.use('/api/tasks', tasksRouter);
+// Auth útvonalak (nyilvános)
+app.use('/api/auth', authRouter);
+
+// Védett API útvonalak
+app.use('/api/users', authMiddleware, usersRouter);
+app.use('/api/tasks', authMiddleware, tasksRouter);
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -3,18 +3,35 @@
     <div class="nav-brand">
       <a routerLink="/">My-Ang</a>
     </div>
-    <ul class="nav-links">
-      <li>
-        <a routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-          Felhasználók
-        </a>
-      </li>
-      <li>
-        <a routerLink="/tasks" routerLinkActive="active">
-          Feladatok
-        </a>
-      </li>
-    </ul>
+
+    @if (authService.isAuthenticated()) {
+      <ul class="nav-links">
+        <li>
+          <a routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            Felhasználók
+          </a>
+        </li>
+        <li>
+          <a routerLink="/tasks" routerLinkActive="active">
+            Feladatok
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-user">
+        <a routerLink="/profile" class="user-name">{{ authService.currentUser()?.name }}</a>
+        <button class="btn btn-secondary btn-sm" (click)="logout()">Kilépés</button>
+      </div>
+    } @else {
+      <ul class="nav-links auth-links">
+        <li>
+          <a routerLink="/login" routerLinkActive="active">Bejelentkezés</a>
+        </li>
+        <li>
+          <a routerLink="/register" class="btn btn-primary">Regisztráció</a>
+        </li>
+      </ul>
+    }
   </nav>
 
   <main class="main-content">
