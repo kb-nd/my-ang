@@ -1,54 +1,81 @@
 <div class="task-list-container">
   <div class="header">
     <h2>Feladatok</h2>
-    <a routerLink="/tasks/new" class="btn btn-primary">Új feladat</a>
+    <a mat-flat-button color="primary" routerLink="/tasks/new">
+      <mat-icon>add</mat-icon>
+      Új feladat
+    </a>
   </div>
 
-  <div class="task-table">
-    <table>
-      <thead>
-        <tr>
-          <th>Cím</th>
-          <th>Állapot</th>
-          <th>Prioritás</th>
-          <th>Hozzárendelve</th>
-          <th>Határidő</th>
-          <th>Műveletek</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let task of tasks">
-          <td>
-            <div class="task-title">{{ task.title }}</div>
-            <div *ngIf="task.description" class="task-description">{{ task.description }}</div>
-          </td>
-          <td>
-            <span class="status-badge" [class]="getStatusClass(task.status)">
-              {{ getStatusLabel(task.status) }}
-            </span>
-          </td>
-          <td>
-            <span class="priority-badge" [class]="getPriorityClass(task.priority)">
-              {{ getPriorityLabel(task.priority) }}
-            </span>
-          </td>
-          <td>{{ task.user_name || 'Nincs hozzárendelve' }}</td>
-          <td>
-            <span *ngIf="task.due_date">{{ task.due_date | date:'yyyy.MM.dd' }}</span>
-            <span *ngIf="!task.due_date" class="no-date">-</span>
-          </td>
-          <td>
-            <div class="actions">
-              <a [routerLink]="['/tasks', task.id]" class="btn btn-secondary btn-sm">Szerkesztés</a>
-              <button (click)="deleteTask(task.id)" class="btn btn-danger btn-sm">Törlés</button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
+  <mat-card class="table-card">
+    <table mat-table [dataSource]="tasks" class="full-width">
+      <!-- Cím -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Cím</th>
+        <td mat-cell *matCellDef="let task">
+          <div class="task-title-cell">
+            <mat-icon class="task-icon">assignment</mat-icon>
+            <a [routerLink]="['/tasks', task.id]" class="task-link">{{ task.title }}</a>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Felelős -->
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef>Felelős</th>
+        <td mat-cell *matCellDef="let task">{{ task.user_name || '-' }}</td>
+      </ng-container>
+
+      <!-- Státusz -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Státusz</th>
+        <td mat-cell *matCellDef="let task">
+          <span class="status-chip" [ngClass]="task.status">
+            {{ getStatusLabel(task.status) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Prioritás -->
+      <ng-container matColumnDef="priority">
+        <th mat-header-cell *matHeaderCellDef>Prioritás</th>
+        <td mat-cell *matCellDef="let task">
+          <span class="priority-chip" [ngClass]="task.priority">
+            {{ getPriorityLabel(task.priority) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Határidő -->
+      <ng-container matColumnDef="deadline">
+        <th mat-header-cell *matHeaderCellDef>Határidő</th>
+        <td mat-cell *matCellDef="let task">{{ task.deadline || '-' }}</td>
+      </ng-container>
+
+      <!-- Műveletek -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let task">
+          <div class="actions">
+            <a mat-icon-button [routerLink]="['/tasks', task.id]" matTooltip="Szerkesztés">
+              <mat-icon>edit</mat-icon>
+            </a>
+            <button mat-icon-button color="warn" (click)="deleteTask(task)" matTooltip="Törlés">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-  </div>
 
-  <div *ngIf="tasks.length === 0" class="empty-state">
-    <p>Nincsenek feladatok.</p>
-  </div>
+    @if (tasks.length === 0) {
+      <div class="empty-state">
+        <mat-icon>assignment</mat-icon>
+        <p>Nincsenek feladatok.</p>
+      </div>
+    }
+  </mat-card>
 </div>

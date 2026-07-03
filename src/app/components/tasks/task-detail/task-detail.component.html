@@ -1,75 +1,84 @@
 <div class="task-detail-container">
-  <h2>{{ isNew ? 'Új feladat' : 'Feladat szerkesztése' }}</h2>
+  <mat-card class="detail-card">
+    <mat-card-header>
+      <mat-card-title>{{ isNew ? 'Új feladat' : 'Feladat szerkesztése' }}</mat-card-title>
+    </mat-card-header>
 
-  <form (ngSubmit)="onSubmit()" class="task-form">
-    <div class="form-group">
-      <label for="title">Cím *</label>
-      <input
-        type="text"
-        id="title"
-        [(ngModel)]="formData.title"
-        name="title"
-        required
-        placeholder="Adja meg a feladat címét"
-      />
-    </div>
-
-    <div class="form-group">
-      <label for="description">Leírás</label>
-      <textarea
-        id="description"
-        [(ngModel)]="formData.description"
-        name="description"
-        rows="4"
-        placeholder="Adja meg a feladat leírását"
-      ></textarea>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="status">Állapot</label>
-        <select id="status" [(ngModel)]="formData.status" name="status">
-          <option value="pending">Függőben</option>
-          <option value="in-progress">Folyamatban</option>
-          <option value="completed">Befejezett</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="priority">Prioritás</label>
-        <select id="priority" [(ngModel)]="formData.priority" name="priority">
-          <option value="low">Alacsony</option>
-          <option value="medium">Közepes</option>
-          <option value="high">Magas</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="user_id">Hozzárendelve</label>
-        <select id="user_id" [(ngModel)]="formData.user_id" name="user_id">
-          <option [ngValue]="undefined">Nincs kiválasztva</option>
-          @for (user of users; track user.id) {
-            <option [ngValue]="user.id">{{ user.name }}</option>
+    <mat-card-content>
+      <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Cím</mat-label>
+          <input matInput formControlName="title" />
+          <mat-icon matPrefix>title</mat-icon>
+          @if (taskForm.controls.title.hasError('required') && taskForm.controls.title.touched) {
+            <mat-error>A cím kötelező</mat-error>
           }
-        </select>
-      </div>
+          @if (taskForm.controls.title.hasError('minlength') && taskForm.controls.title.touched) {
+            <mat-error>A cím legalább 3 karakter</mat-error>
+          }
+        </mat-form-field>
 
-      <div class="form-group">
-        <label for="due_date">Határidő</label>
-        <input
-          type="date"
-          id="due_date"
-          [(ngModel)]="formData.due_date"
-          name="due_date"
-        />
-      </div>
-    </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Leírás</mat-label>
+          <textarea matInput formControlName="description" rows="4"></textarea>
+          <mat-icon matPrefix>description</mat-icon>
+        </mat-form-field>
 
-    <div class="form-actions">
-      <button type="button" (click)="onCancel()" class="btn btn-secondary">Mégse</button>
-      <button type="submit" class="btn btn-primary">{{ isNew ? 'Létrehozás' : 'Mentés' }}</button>
-    </div>
-  </form>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Státusz</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="pending">Függőben</mat-option>
+              <mat-option value="in-progress">Folyamatban</mat-option>
+              <mat-option value="completed">Befejezett</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>flag</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Prioritás</mat-label>
+            <mat-select formControlName="priority">
+              <mat-option value="low">Alacsony</mat-option>
+              <mat-option value="medium">Közepes</mat-option>
+              <mat-option value="high">Magas</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>trending_up</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Felelős</mat-label>
+            <mat-select formControlName="user_id">
+              <mat-option [value]="null">Nincs felelős</mat-option>
+              @for (user of users; track user.id) {
+                <mat-option [value]="user.id">{{ user.name }}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matPrefix>person</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Határidő</mat-label>
+            <input matInput formControlName="due_date" type="date" />
+            <mat-icon matPrefix>event</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="onCancel()">Mégse</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="isLoading || taskForm.invalid">
+            @if (isLoading) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              <ng-container>
+                <mat-icon>save</mat-icon>
+                Mentés
+              </ng-container>
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 </div>

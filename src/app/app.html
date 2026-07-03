@@ -1,44 +1,40 @@
-<div class="app-container">
-  <nav class="navbar">
-    <div class="nav-brand">
-      <a routerLink="/">My-Ang</a>
+<mat-toolbar class="navbar" color="primary">
+  <a routerLink="/" class="brand">MyAng</a>
+
+  @if (authService.isAuthenticated()) {
+    <nav class="nav-links">
+      <a mat-button routerLink="/users" routerLinkActive="active-link">
+        <mat-icon>people</mat-icon>
+        Felhasználók
+      </a>
+      <a mat-button routerLink="/tasks" routerLinkActive="active-link">
+        <mat-icon>task_alt</mat-icon>
+        Feladatok
+      </a>
+    </nav>
+
+    <div class="nav-user">
+      <a mat-button routerLink="/profile" class="user-link">
+        <mat-icon>account_circle</mat-icon>
+        {{ authService.currentUser()?.name }}
+      </a>
+      <button mat-stroked-button (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Kilépés
+      </button>
     </div>
+  } @else {
+    <div class="nav-user">
+      <a mat-button routerLink="/login">Bejelentkezés</a>
+      <a mat-flat-button color="accent" routerLink="/register">Regisztráció</a>
+    </div>
+  }
+</mat-toolbar>
 
-    @if (authService.isAuthenticated()) {
-      <ul class="nav-links">
-        <li>
-          <a routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-            Felhasználók
-          </a>
-        </li>
-        <li>
-          <a routerLink="/tasks" routerLinkActive="active">
-            Feladatok
-          </a>
-        </li>
-      </ul>
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
 
-      <div class="nav-user">
-        <a routerLink="/profile" class="user-name">{{ authService.currentUser()?.name }}</a>
-        <button class="btn btn-secondary btn-sm" (click)="logout()">Kilépés</button>
-      </div>
-    } @else {
-      <ul class="nav-links auth-links">
-        <li>
-          <a routerLink="/login" routerLinkActive="active">Bejelentkezés</a>
-        </li>
-        <li>
-          <a routerLink="/register" class="btn btn-primary">Regisztráció</a>
-        </li>
-      </ul>
-    }
-  </nav>
-
-  <main class="main-content">
-    <router-outlet></router-outlet>
-  </main>
-
-  <footer class="footer">
-    <p>&copy; 2026 My-Ang Projekt</p>
-  </footer>
-</div>
+<footer class="footer">
+  <p>&copy; 2026 MyAng Projekt</p>
+</footer>

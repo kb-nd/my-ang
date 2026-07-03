@@ -1,101 +1,50 @@
 .user-detail-container {
   max-width: 560px;
   margin: 0 auto;
+}
 
-  h2 {
-    margin-bottom: 28px;
-    color: var(--text-primary);
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+.detail-card {
+  border-radius: 16px;
+  padding: 8px;
+
+  mat-card-header {
+    margin-bottom: 24px;
+
+    mat-card-title {
+      font-size: 24px;
+      font-weight: 600;
+    }
   }
 }
 
-.user-form {
-  background: var(--bg-card);
-  padding: 32px;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-default);
-  box-shadow: var(--shadow-sm);
+.full-width {
+  width: 100%;
+  margin-bottom: 4px;
 }
 
-.form-group {
-  margin-bottom: 22px;
+.checkbox-row {
+  padding: 8px 0 16px;
+}
 
-  label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary);
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  input[type="password"] {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1.5px solid var(--border-default);
-    border-radius: var(--radius-sm);
-    font-size: 15px;
-    color: var(--text-primary);
-    background: var(--bg-card);
-    transition: border-color var(--transition), box-shadow var(--transition);
-
-    &::placeholder {
-      color: var(--text-muted);
-    }
-
-    &:focus {
-      outline: none;
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-    }
-  }
-
-  &.checkbox {
-    label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      font-weight: 400;
-    }
-
-    input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-  }
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.6;
+  padding: 16px 0 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .form-actions {
   display: flex;
-  gap: 12px;
   justify-content: flex-end;
-  margin-top: 28px;
-  padding-top: 20px;
-  border-top: 1px solid var(--gray-100);
-}
+  gap: 12px;
+  padding-top: 16px;
 
-.alert {
-  padding: 12px 16px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 20px;
-  font-size: 14px;
-}
-
-.alert-error {
-  background: var(--red-50);
-  color: var(--red-600);
-  border: 1px solid var(--red-100);
-}
-
-.alert-success {
-  background: var(--green-50);
-  color: var(--green-600);
-  border: 1px solid var(--green-100);
+  button {
+    mat-spinner {
+      display: inline-block;
+    }
+  }
 }

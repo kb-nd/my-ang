@@ -1,119 +1,163 @@
 <div class="profile-container">
-  <div class="profile-header">
-    <h1>Profilom</h1>
-    <p>Kezeld a fiókadataidat és jelszavadat</p>
-  </div>
-
-  @if (errorMessage()) {
-    <div class="alert alert-error">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="15" y1="9" x2="9" y2="15"></line>
-        <line x1="9" y1="9" x2="15" y2="15"></line>
-      </svg>
-      {{ errorMessage() }}
+  <div class="header">
+    <mat-icon class="header-icon">account_circle</mat-icon>
+    <div>
+      <h2>Profilom</h2>
+      <p class="subtitle">{{ currentUser()?.name }} - {{ currentUser()?.email }}</p>
     </div>
-  }
-
-  @if (successMessage()) {
-    <div class="alert alert-success">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-      </svg>
-      {{ successMessage() }}
-    </div>
-  }
-
-  <div class="profile-grid">
-    <section class="profile-section">
-      <h2>Személyes adatok</h2>
-      <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()" class="profile-form">
-        <div class="form-group">
-          <label for="name">Név</label>
-          <input type="text" id="name" formControlName="name" placeholder="Név">
-          @if (profileForm.get('name')?.invalid && profileForm.get('name')?.touched) {
-            <span class="field-error">A név megadása kötelező (min. 2 karakter)</span>
-          }
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" formControlName="email" placeholder="Email cím">
-          @if (profileForm.get('email')?.invalid && profileForm.get('email')?.touched) {
-            <span class="field-error">Érvényes email cím megadása kötelező</span>
-          }
-        </div>
-
-        <div class="form-group">
-          <label for="phone">Telefonszám (opcionális)</label>
-          <input type="tel" id="phone" formControlName="phone" placeholder="Telefonszám">
-        </div>
-
-        <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || isLoading()">
-          @if (isLoading()) {
-            <div class="spinner"></div>
-            Mentés...
-          } @else {
-            Módosítások mentése
-          }
-        </button>
-      </form>
-    </section>
-
-    <section class="profile-section">
-      <h2>Jelszó módosítása</h2>
-      <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()" class="profile-form">
-        <div class="form-group">
-          <label for="currentPassword">Jelenlegi jelszó</label>
-          <input type="password" id="currentPassword" formControlName="currentPassword" placeholder="Jelenlegi jelszó">
-          @if (passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched) {
-            <span class="field-error">A jelenlegi jelszó megadása kötelező</span>
-          }
-        </div>
-
-        <div class="form-group">
-          <label for="newPassword">Új jelszó</label>
-          <input type="password" id="newPassword" formControlName="newPassword" placeholder="Új jelszó (min. 6 karakter)">
-          @if (passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched) {
-            <span class="field-error">Az új jelszónak legalább 6 karakter hosszúnak kell lennie</span>
-          }
-        </div>
-
-        <div class="form-group">
-          <label for="confirmPassword">Új jelszó megerősítése</label>
-          <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Új jelszó újra">
-          @if (passwordForm.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched) {
-            <span class="field-error">A két jelszó nem egyezik</span>
-          }
-        </div>
-
-        <button type="submit" class="btn btn-primary" [disabled]="passwordForm.invalid || isLoading()">
-          @if (isLoading()) {
-            <div class="spinner"></div>
-            Módosítás...
-          } @else {
-            Jelszó megváltoztatása
-          }
-        </button>
-      </form>
-    </section>
-
-    <section class="profile-section danger-zone">
-      <h2>Veszélyzóna</h2>
-      <p>Ezek a műveletek véglegesek és nem vonhatók vissza.</p>
-      <button type="button" class="btn btn-danger" (click)="onDeleteAccount()" [disabled]="isLoading()">
-        @if (isLoading()) {
-          <div class="spinner"></div>
-          Törlés...
-        } @else {
-          Fiók törlése
-        }
-      </button>
-    </section>
   </div>
 
-  <div class="profile-actions">
-    <button class="btn btn-secondary" (click)="logout()">Kijelentkezés</button>
-  </div>
+  <mat-tab-group animationDuration="200ms">
+    <!-- Profil szerkesztése -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>person</mat-icon>
+        <span>Profil szerkesztése</span>
+      </ng-template>
+
+      <div class="tab-content">
+        <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Név</mat-label>
+            <input matInput formControlName="name" />
+            <mat-icon matPrefix>person</mat-icon>
+            @if (profileForm.controls['name'].hasError('required') && profileForm.controls['name'].touched) {
+              <mat-error>A név kötelező</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" />
+            <mat-icon matPrefix>email</mat-icon>
+            @if (profileForm.controls['email'].hasError('required') && profileForm.controls['email'].touched) {
+              <mat-error>Az email kötelező</mat-error>
+            }
+            @if (profileForm.controls['email'].hasError('email') && profileForm.controls['email'].touched) {
+              <mat-error>Érvénytelen email</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Telefonszám</mat-label>
+            <input matInput formControlName="phone" />
+            <mat-icon matPrefix>phone</mat-icon>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-flat-button color="primary" type="submit" [disabled]="isLoading() || profileForm.invalid">
+              @if (isLoading()) {
+                <mat-spinner diameter="20"></mat-spinner>
+              } @else {
+                <ng-container>
+                  <mat-icon>save</mat-icon>
+                  Mentés
+                </ng-container>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+
+    <!-- Jelszó változtatás -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>lock</mat-icon>
+        <span>Jelszó változtatás</span>
+      </ng-template>
+
+      <div class="tab-content">
+        <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Jelenlegi jelszó</mat-label>
+            <input matInput formControlName="currentPassword" [type]="hideCurrentPassword ? 'password' : 'text'" />
+            <mat-icon matPrefix>lock</mat-icon>
+            <button mat-icon-button matSuffix type="button" (click)="hideCurrentPassword = !hideCurrentPassword">
+              <mat-icon>{{ hideCurrentPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (passwordForm.controls['currentPassword'].hasError('required') && passwordForm.controls['currentPassword'].touched) {
+              <mat-error>A jelenlegi jelszó kötelező</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Új jelszó</mat-label>
+            <input matInput formControlName="newPassword" [type]="hideNewPassword ? 'password' : 'text'" />
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <button mat-icon-button matSuffix type="button" (click)="hideNewPassword = !hideNewPassword">
+              <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (passwordForm.controls['newPassword'].hasError('required') && passwordForm.controls['newPassword'].touched) {
+              <mat-error>Az új jelszó kötelező</mat-error>
+            }
+            @if (passwordForm.controls['newPassword'].hasError('minlength') && passwordForm.controls['newPassword'].touched) {
+              <mat-error>A jelszó legalább 6 karakter</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Jelszó megerősítése</mat-label>
+            <input matInput formControlName="confirmPassword" [type]="hideConfirmPassword ? 'password' : 'text'" />
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
+              <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (passwordForm.controls['confirmPassword'].hasError('passwordMismatch') && passwordForm.controls['confirmPassword'].touched) {
+              <mat-error>A jelszavak nem egyeznek</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-flat-button color="primary" type="submit" [disabled]="isLoading() || passwordForm.invalid">
+              @if (isLoading()) {
+                <mat-spinner diameter="20"></mat-spinner>
+              } @else {
+                <ng-container>
+                  <mat-icon>save</mat-icon>
+                  Jelszó mentése
+                </ng-container>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+
+    <!-- Fiók kezelése -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>settings</mat-icon>
+        <span>Fiók kezelése</span>
+      </ng-template>
+
+      <div class="tab-content">
+        <div class="account-section">
+          <h3>Kijelentkezés</h3>
+          <p>Kijelentkezik a fiókjából ezen az eszközön.</p>
+          <button mat-stroked-button color="accent" (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            Kijelentkezés
+          </button>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="account-section danger-zone">
+          <h3>Fiók törlése</h3>
+          <p>Véglegesen törli a fiókját és minden adatait. Ez a művelet nem vonható vissza!</p>
+          <button mat-flat-button color="warn" (click)="onDeleteAccount()" [disabled]="isLoading()">
+            @if (isLoading()) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              <ng-container>
+                <mat-icon>delete_forever</mat-icon>
+                Fiók törlése
+              </ng-container>
+            }
+          </button>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

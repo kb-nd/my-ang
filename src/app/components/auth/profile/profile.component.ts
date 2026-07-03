@@ -2,6 +2,15 @@ import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService, ChangePasswordRequest } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../../models/user.model';
@@ -9,7 +18,12 @@ import { User } from '../../../models/user.model';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule, ReactiveFormsModule,
+    MatCardModule, MatFormFieldModule, MatInputModule,
+    MatButtonModule, MatIconModule, MatTabsModule,
+    MatDividerModule, MatProgressSpinnerModule, MatSnackBarModule
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -18,11 +32,13 @@ export class ProfileComponent implements OnInit {
   private userService = inject(UserService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
 
   currentUser = computed(() => this.authService.currentUser());
   isLoading = signal(false);
-  errorMessage = signal<string | null>(null);
-  successMessage = signal<string | null>(null);
+  hideCurrentPassword = true;
+  hideNewPassword = true;
+  hideConfirmPassword = true;
 
   profileForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -61,17 +77,15 @@ export class ProfileComponent implements OnInit {
     if (this.profileForm.invalid) return;
 
     this.isLoading.set(true);
-    this.clearMessages();
 
     this.userService.updateProfile(this.profileForm.value).subscribe({
-      next: (user) => {
+      next: () => {
         this.isLoading.set(false);
-        this.successMessage.set('Profil sikeresen frissítve');
-        setTimeout(() => this.successMessage.set(null), 3000);
+        this.snackBar.open('Profil sikeresen frissítve', 'OK', { duration: 3000 });
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.error?.error || 'Hiba a profil frissítésekor');
+        this.snackBar.open(err.error?.error || 'Hiba a profil frissítésekor', 'Bezár', { duration: 3000 });
       }
     });
   }
@@ -85,18 +99,16 @@ export class ProfileComponent implements OnInit {
     };
 
     this.isLoading.set(true);
-    this.clearMessages();
 
     this.authService.changePassword(data).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.passwordForm.reset();
-        this.successMessage.set('Jelszó sikeresen megváltoztatva');
-        setTimeout(() => this.successMessage.set(null), 3000);
+        this.snackBar.open('Jelszó sikeresen megváltoztatva', 'OK', { duration: 3000 });
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.error?.error || 'Hiba a jelszó változtatásakor');
+        this.snackBar.open(err.error?.error || 'Hiba a jelszó változtatásakor', 'Bezár', { duration: 3000 });
       }
     });
   }
@@ -107,7 +119,6 @@ export class ProfileComponent implements OnInit {
     }
 
     this.isLoading.set(true);
-    this.clearMessages();
 
     this.authService.deleteAccount().subscribe({
       next: () => {
@@ -116,7 +127,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.error?.error || 'Hiba a fiók törlésekor');
+        this.snackBar.open(err.error?.error || 'Hiba a fiók törlésekor', 'Bezár', { duration: 3000 });
       }
     });
   }
@@ -124,10 +135,5 @@ export class ProfileComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
-  }
-
-  private clearMessages(): void {
-    this.errorMessage.set(null);
-    this.successMessage.set(null);
   }
 }

@@ -1,63 +1,29 @@
-:root {
-  /* Szürke skála */
-  --gray-50: #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e2e8f0;
-  --gray-300: #cbd5e1;
-  --gray-400: #94a3b8;
-  --gray-500: #64748b;
-  --gray-600: #475569;
-  --gray-700: #334155;
-  --gray-800: #1e293b;
-  --gray-900: #0f172a;
+@use '@angular/material' as mat;
 
-  /* Világoskék skála */
-  --blue-50: #eff6ff;
-  --blue-100: #dbeafe;
-  --blue-200: #bfdbfe;
-  --blue-300: #93c5fd;
-  --blue-400: #60a5fa;
-  --blue-500: #3b82f6;
-  --blue-600: #2563eb;
-  --blue-700: #1d4ed8;
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+        theme: dark,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
 
-  /* Sikered/Hiba */
-  --green-50: #052e16;
-  --green-100: #14532d;
-  --green-500: #22c55e;
-  --green-600: #4ade80;
-  --red-50: #450a0a;
-  --red-100: #7f1d1d;
-  --red-500: #ef4444;
-  --red-600: #f87171;
-
-  /* Komponens színek */
-  --bg-primary: var(--gray-800);
-  --bg-card: var(--gray-700);
-  --bg-navbar: var(--gray-900);
-  --bg-footer: var(--gray-900);
-
-  --text-primary: var(--gray-100);
-  --text-secondary: var(--gray-400);
-  --text-muted: var(--gray-500);
-  --text-inverse: #ffffff;
-
-  --border-default: var(--gray-600);
-  --border-focus: var(--blue-400);
-
-  --accent: var(--blue-500);
-  --accent-hover: var(--blue-400);
-  --accent-light: #172554;
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-
-  --transition: 0.2s ease;
+body {
+  color-scheme: dark;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 * {
@@ -66,176 +32,14 @@
   padding: 0;
 }
 
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 a {
-  color: var(--accent);
+  color: var(--mat-sys-primary);
   text-decoration: none;
-  transition: color var(--transition);
+  transition: opacity 0.2s;
 
   &:hover {
-    color: var(--accent-hover);
+    opacity: 0.8;
   }
-}
-
-/* Globális gomb stílusok */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--transition);
-  text-decoration: none;
-  line-height: 1.4;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  &.btn-primary {
-    background: var(--accent);
-    color: var(--text-inverse);
-
-    &:hover:not(:disabled) {
-      background: var(--accent-hover);
-      box-shadow: var(--shadow-md);
-      transform: translateY(-1px);
-    }
-  }
-
-  &.btn-secondary {
-    background: var(--bg-card);
-    color: var(--text-primary);
-    border: 1px solid var(--border-default);
-
-    &:hover:not(:disabled) {
-      background: var(--gray-50);
-      border-color: var(--gray-300);
-    }
-  }
-
-  &.btn-danger {
-    background: var(--red-50);
-    color: var(--red-600);
-    border: 1px solid var(--red-100);
-
-    &:hover:not(:disabled) {
-      background: var(--red-100);
-      border-color: #fca5a5;
-    }
-  }
-
-  &.btn-sm {
-    padding: 6px 12px;
-    font-size: 13px;
-  }
-}
-
-/* Globális form stílusok */
-.form-group {
-  margin-bottom: 20px;
-
-  label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary);
-  }
-
-  input,
-  select,
-  textarea {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1.5px solid var(--border-default);
-    border-radius: var(--radius-sm);
-    font-size: 15px;
-    color: var(--text-primary);
-    background: var(--bg-card);
-    transition: border-color var(--transition), box-shadow var(--transition);
-
-    &::placeholder {
-      color: var(--text-muted);
-    }
-
-    &:focus {
-      outline: none;
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-    }
-
-    &:disabled {
-      background: var(--gray-100);
-      color: var(--text-muted);
-    }
-  }
-}
-
-/* Alert stílusok */
-.alert {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 14px 16px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  margin-bottom: 20px;
-
-  &.alert-error {
-    background: var(--red-50);
-    color: var(--red-600);
-    border: 1px solid var(--red-100);
-  }
-
-  &.alert-success {
-    background: var(--green-50);
-    color: var(--green-600);
-    border: 1px solid var(--green-100);
-  }
-
-  &.alert-info {
-    background: var(--blue-50);
-    color: var(--blue-700);
-    border: 1px solid var(--blue-100);
-  }
-}
-
-/* Kártya stílus */
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  padding: 24px;
-}
-
-/* Spinner animáció */
-.spinner {
-  width: 18px;
-  height: 18px;
-  border: 2.5px solid var(--gray-200);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 /* Scrollbar */
@@ -244,14 +48,34 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--gray-800);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gray-600);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gray-500);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Form field hover */
+.mat-mdc-form-field {
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* Table row hover */
+.mat-mdc-row {
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
 }

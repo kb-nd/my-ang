@@ -1,89 +1,91 @@
 <div class="auth-container">
-  <div class="auth-card">
-    <h1>Regisztráció</h1>
+  <mat-card class="auth-card">
+    <mat-card-header>
+      <mat-card-title>Regisztráció</mat-card-title>
+    </mat-card-header>
 
-    @if (error()) {
-      <div class="alert alert-error">{{ error() }}</div>
-    }
+    <mat-card-content>
+      @if (error()) {
+        <div class="alert alert-error">
+          <mat-icon>error</mat-icon>
+          {{ error() }}
+        </div>
+      }
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="name">Név</label>
-        <input
-          id="name"
-          type="text"
-          formControlName="name"
-          placeholder="Teljes neved"
-          [class.error]="registerForm.controls.name.invalid && registerForm.controls.name.touched"
-        />
-        @if (registerForm.controls.name.invalid && registerForm.controls.name.touched) {
-          <span class="error-text">A név legalább 2 karakter</span>
-        }
-      </div>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Név</mat-label>
+          <input matInput formControlName="name" placeholder="Teljes neved" />
+          <mat-icon matPrefix>person</mat-icon>
+          @if (registerForm.controls.name.hasError('required') && registerForm.controls.name.touched) {
+            <mat-error>A név kötelező</mat-error>
+          }
+          @if (registerForm.controls.name.hasError('minlength') && registerForm.controls.name.touched) {
+            <mat-error>A név legalább 2 karakter</mat-error>
+          }
+        </mat-form-field>
 
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="Email címed"
-          [class.error]="registerForm.controls.email.invalid && registerForm.controls.email.touched"
-        />
-        @if (registerForm.controls.email.invalid && registerForm.controls.email.touched) {
-          <span class="error-text">Érvényes email cím megadása kötelező</span>
-        }
-      </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="pelda@email.com" />
+          <mat-icon matPrefix>email</mat-icon>
+          @if (registerForm.controls.email.hasError('required') && registerForm.controls.email.touched) {
+            <mat-error>Az email kötelező</mat-error>
+          }
+          @if (registerForm.controls.email.hasError('email') && registerForm.controls.email.touched) {
+            <mat-error>Érvényes email cím szükséges</mat-error>
+          }
+        </mat-form-field>
 
-      <div class="form-group">
-        <label for="phone">Telefonszám (opcionális)</label>
-        <input
-          id="phone"
-          type="tel"
-          formControlName="phone"
-          placeholder="+36 XX XXX XXXX"
-        />
-      </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Telefonszám</mat-label>
+          <input matInput formControlName="phone" type="tel" placeholder="+36 XX XXX XXXX" />
+          <mat-icon matPrefix>phone</mat-icon>
+        </mat-form-field>
 
-      <div class="form-group">
-        <label for="password">Jelszó</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          placeholder="Jelszó (min. 6 karakter)"
-          [class.error]="registerForm.controls.password.invalid && registerForm.controls.password.touched"
-        />
-        @if (registerForm.controls.password.invalid && registerForm.controls.password.touched) {
-          <span class="error-text">A jelszó legalább 6 karakter</span>
-        }
-      </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Jelszó</mat-label>
+          <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (registerForm.controls.password.hasError('required') && registerForm.controls.password.touched) {
+            <mat-error>A jelszó kötelező</mat-error>
+          }
+          @if (registerForm.controls.password.hasError('minlength') && registerForm.controls.password.touched) {
+            <mat-error>A jelszó legalább 6 karakter</mat-error>
+          }
+        </mat-form-field>
 
-      <div class="form-group">
-        <label for="confirmPassword">Jelszó megerősítése</label>
-        <input
-          id="confirmPassword"
-          type="password"
-          formControlName="confirmPassword"
-          placeholder="Jelszó újra"
-          [class.error]="registerForm.controls.confirmPassword.invalid && registerForm.controls.confirmPassword.touched"
-        />
-        @if (registerForm.controls.confirmPassword.errors?.['mismatch'] && registerForm.controls.confirmPassword.touched) {
-          <span class="error-text">A jelszavak nem egyeznek</span>
-        }
-      </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Jelszó megerősítése</mat-label>
+          <input matInput formControlName="confirmPassword" [type]="hideConfirmPassword ? 'password' : 'text'" />
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
+            <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (registerForm.controls.confirmPassword.hasError('mismatch') && registerForm.controls.confirmPassword.touched) {
+            <mat-error>A jelszavak nem egyeznek</mat-error>
+          }
+        </mat-form-field>
 
-      <button type="submit" class="btn btn-primary" [disabled]="isLoading() || registerForm.invalid">
-        @if (isLoading()) {
-          <span class="spinner"></span> Regisztráció...
-        } @else {
-          Regisztráció
-        }
-      </button>
-    </form>
+        <button mat-flat-button color="primary" type="submit" class="full-width submit-btn"
+                [disabled]="isLoading() || registerForm.invalid">
+          @if (isLoading()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            <ng-container>
+              <mat-icon>person_add</mat-icon>
+              Regisztráció
+            </ng-container>
+          }
+        </button>
+      </form>
+    </mat-card-content>
 
-    <p class="auth-link">
-      Már van fiókod? <a routerLink="/login">Bejelentkezés</a>
-    </p>
-  </div>
+    <mat-card-actions align="end">
+      <a mat-button routerLink="/login">Már van fiókod? Bejelentkezés</a>
+    </mat-card-actions>
+  </mat-card>
 </div>

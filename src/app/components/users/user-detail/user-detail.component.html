@@ -1,74 +1,66 @@
 <div class="user-detail-container">
-  <h2>{{ isNew ? 'Új felhasználó' : 'Felhasználó szerkesztése' }}</h2>
+  <mat-card class="detail-card">
+    <mat-card-header>
+      <mat-card-title>{{ isNew ? 'Új felhasználó' : 'Felhasználó szerkesztése' }}</mat-card-title>
+    </mat-card-header>
 
-  @if (errorMessage) {
-    <div class="alert alert-error">{{ errorMessage }}</div>
-  }
-  @if (successMessage) {
-    <div class="alert alert-success">{{ successMessage }}</div>
-  }
+    <mat-card-content>
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Név</mat-label>
+          <input matInput formControlName="name" />
+          <mat-icon matPrefix>person</mat-icon>
+          @if (userForm.controls.name.hasError('required') && userForm.controls.name.touched) {
+            <mat-error>A név kötelező</mat-error>
+          }
+        </mat-form-field>
 
-  <form (ngSubmit)="onSubmit()" class="user-form">
-    <div class="form-group">
-      <label for="name">Név *</label>
-      <input
-        type="text"
-        id="name"
-        [(ngModel)]="formData.name"
-        name="name"
-        required
-        placeholder="Adja meg a nevet"
-      />
-    </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" />
+          <mat-icon matPrefix>email</mat-icon>
+          @if (userForm.controls.email.hasError('required') && userForm.controls.email.touched) {
+            <mat-error>Az email kötelező</mat-error>
+          }
+          @if (userForm.controls.email.hasError('email') && userForm.controls.email.touched) {
+            <mat-error>Érvénytelen email</mat-error>
+          }
+        </mat-form-field>
 
-    <div class="form-group">
-      <label for="email">Email *</label>
-      <input
-        type="email"
-        id="email"
-        [(ngModel)]="formData.email"
-        name="email"
-        required
-        placeholder="Adja meg az email címet"
-      />
-    </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Telefonszám</mat-label>
+          <input matInput formControlName="phone" />
+          <mat-icon matPrefix>phone</mat-icon>
+        </mat-form-field>
 
-    <div class="form-group">
-      <label for="phone">Telefonszám</label>
-      <input
-        type="tel"
-        id="phone"
-        [(ngModel)]="formData.phone"
-        name="phone"
-        placeholder="Adja meg a telefonszámot"
-      />
-    </div>
+        <div class="checkbox-row">
+          <mat-checkbox formControlName="is_active">Aktív fiók</mat-checkbox>
+        </div>
 
-    <div class="form-group checkbox">
-      <label>
-        <input
-          type="checkbox"
-          [(ngModel)]="formData.is_active"
-          name="is_active"
-        />
-        Aktív felhasználó
-      </label>
-    </div>
+        <div class="section-title">Jelszó megváltoztatása</div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Új jelszó</mat-label>
+          <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        </mat-form-field>
 
-    <div class="form-group">
-      <label for="password">{{ isNew ? 'Jelszó *' : 'Új jelszó (ha változtatni kell)' }}</label>
-      <input
-        type="password"
-        id="password"
-        [(ngModel)]="password"
-        name="password"
-        [placeholder]="isNew ? 'Adja meg a jelszót' : 'Hagyja üresen, ha nem változtatja'"
-      />
-    </div>
-
-    <div class="form-actions">
-      <button type="button" (click)="onCancel()" class="btn btn-secondary">Mégse</button>
-      <button type="submit" class="btn btn-primary">{{ isNew ? 'Létrehozás' : 'Mentés' }}</button>
-    </div>
-  </form>
+        <div class="form-actions">
+          <button mat-button type="button" (click)="onCancel()">Mégse</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="isLoading || userForm.invalid">
+            @if (isLoading) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              <ng-container>
+                <mat-icon>save</mat-icon>
+                Mentés
+              </ng-container>
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 </div>

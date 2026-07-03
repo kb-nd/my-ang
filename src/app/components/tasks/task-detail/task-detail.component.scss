@@ -1,90 +1,50 @@
 .task-detail-container {
   max-width: 640px;
   margin: 0 auto;
+}
 
-  h2 {
-    margin-bottom: 28px;
-    color: var(--text-primary);
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+.detail-card {
+  border-radius: 16px;
+  padding: 8px;
+
+  mat-card-header {
+    margin-bottom: 24px;
+
+    mat-card-title {
+      font-size: 24px;
+      font-weight: 600;
+    }
   }
 }
 
-.task-form {
-  background: var(--bg-card);
-  padding: 32px;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-default);
-  box-shadow: var(--shadow-sm);
-}
-
-.form-group {
-  margin-bottom: 22px;
-
-  label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 500;
-    color: var(--text-primary);
-    font-size: 14px;
-  }
-
-  input[type="text"],
-  input[type="date"],
-  select,
-  textarea {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1.5px solid var(--border-default);
-    border-radius: var(--radius-sm);
-    font-size: 15px;
-    color: var(--text-primary);
-    background: var(--bg-card);
-    transition: border-color var(--transition), box-shadow var(--transition);
-    font-family: inherit;
-
-    &::placeholder {
-      color: var(--text-muted);
-    }
-
-    &:focus {
-      outline: none;
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-    }
-  }
-
-  textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
-
-  select {
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 36px;
-  }
+.full-width {
+  width: 100%;
+  margin-bottom: 4px;
 }
 
 .form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  display: flex;
+  gap: 16px;
 
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
+  .half-width {
+    flex: 1;
   }
 }
 
 .form-actions {
   display: flex;
-  gap: 12px;
   justify-content: flex-end;
-  margin-top: 28px;
-  padding-top: 20px;
-  border-top: 1px solid var(--gray-100);
+  gap: 12px;
+  padding-top: 16px;
+
+  button mat-spinner {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
 }

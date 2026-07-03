@@ -1,60 +1,84 @@
 <div class="auth-container">
-  <div class="auth-card">
-    <h1>Bejelentkezés</h1>
+  <mat-card class="auth-card">
+    <mat-card-header>
+      <mat-card-title>Bejelentkezés</mat-card-title>
+    </mat-card-header>
 
-    @if (error()) {
-      <div class="alert alert-error">{{ error() }}</div>
-    }
+    <mat-card-content>
+      @if (error()) {
+        <div class="alert alert-error">
+          <mat-icon>error</mat-icon>
+          {{ error() }}
+        </div>
+      }
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="Email címed"
-          [class.error]="loginForm.controls.email.invalid && loginForm.controls.email.touched"
-        />
-        @if (loginForm.controls.email.invalid && loginForm.controls.email.touched) {
-          <span class="error-text">Érvényes email cím megadása kötelező</span>
-        }
-      </div>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="pelda@email.com" />
+          <mat-icon matPrefix>email</mat-icon>
+          @if (loginForm.controls.email.hasError('required') && loginForm.controls.email.touched) {
+            <mat-error>Az email kötelező</mat-error>
+          }
+          @if (loginForm.controls.email.hasError('email') && loginForm.controls.email.touched) {
+            <mat-error>Érvényes email cím szükséges</mat-error>
+          }
+        </mat-form-field>
 
-      <div class="form-group">
-        <label for="password">Jelszó</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          placeholder="Jelszavad"
-          [class.error]="loginForm.controls.password.invalid && loginForm.controls.password.touched"
-        />
-        @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
-          <span class="error-text">A jelszó legalább 6 karakter</span>
-        }
-      </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Jelszó</mat-label>
+          <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (loginForm.controls.password.hasError('required') && loginForm.controls.password.touched) {
+            <mat-error>A jelszó kötelező</mat-error>
+          }
+          @if (loginForm.controls.password.hasError('minlength') && loginForm.controls.password.touched) {
+            <mat-error>A jelszó legalább 6 karakter</mat-error>
+          }
+        </mat-form-field>
 
-      <button type="submit" class="btn btn-primary" [disabled]="isLoading() || loginForm.invalid">
-        @if (isLoading()) {
-          <span class="spinner"></span> Bejelentkezés...
-        } @else {
-          Bejelentkezés
-        }
-      </button>
-    </form>
+        <button mat-flat-button color="primary" type="submit" class="full-width submit-btn"
+                [disabled]="isLoading() || loginForm.invalid">
+          @if (isLoading()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            <ng-container>
+              <mat-icon>login</mat-icon>
+              Bejelentkezés
+            </ng-container>
+          }
+        </button>
+      </form>
+    </mat-card-content>
 
-    <p class="auth-link">
-      Nincs fiókod? <a routerLink="/register">Regisztráció</a>
-    </p>
+    <mat-card-actions align="end">
+      <a mat-button routerLink="/register">Nincs fiókod? Regisztráció</a>
+    </mat-card-actions>
 
-    <details class="demo-credentials">
-      <summary>Demo fiókok</summary>
-      <ul>
-        <li>kovacs.janos&#64;example.com / password123</li>
-        <li>nagy.anna&#64;example.com / password123</li>
-        <li>szabo.peter&#64;example.com / password123</li>
-      </ul>
-    </details>
-  </div>
+    <div class="demo-section">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Demo fiókok</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="demo-accounts">
+          <div class="demo-account">
+            <strong>Kovács János</strong>
+            <code>kovacs.janos&#64;example.com</code>
+          </div>
+          <div class="demo-account">
+            <strong>Nagy Anna</strong>
+            <code>nagy.anna&#64;example.com</code>
+          </div>
+          <div class="demo-account">
+            <strong>Szabó Péter</strong>
+            <code>szabo.peter&#64;example.com</code>
+          </div>
+          <p class="demo-password">Jelszó: <code>password123</code></p>
+        </div>
+      </mat-expansion-panel>
+    </div>
+  </mat-card>
 </div>

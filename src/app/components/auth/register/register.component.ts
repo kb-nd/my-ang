@@ -2,12 +2,22 @@ import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService, RegisterRequest } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [
+    CommonModule, ReactiveFormsModule, RouterLink,
+    MatCardModule, MatFormFieldModule, MatInputModule,
+    MatButtonModule, MatIconModule, MatProgressSpinnerModule
+  ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -18,13 +28,15 @@ export class RegisterComponent {
 
   isLoading = signal(false);
   error = signal<string | null>(null);
+  hidePassword = true;
+  hideConfirmPassword = true;
 
   registerForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
+    phone: [''],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    confirmPassword: ['', [Validators.required]],
-    phone: ['']
+    confirmPassword: ['', [Validators.required]]
   }, { validators: this.passwordMatchValidator });
 
   passwordMatchValidator(form: any) {

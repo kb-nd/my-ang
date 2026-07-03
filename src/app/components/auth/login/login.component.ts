@@ -2,12 +2,24 @@ import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { AuthService, LoginRequest } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [
+    CommonModule, ReactiveFormsModule, RouterLink,
+    MatCardModule, MatFormFieldModule, MatInputModule,
+    MatButtonModule, MatIconModule, MatProgressSpinnerModule,
+    MatExpansionModule
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -19,6 +31,7 @@ export class LoginComponent {
 
   isLoading = signal(false);
   error = signal<string | null>(null);
+  hidePassword = true;
   returnUrl = '/users';
 
   loginForm = this.fb.nonNullable.group({
